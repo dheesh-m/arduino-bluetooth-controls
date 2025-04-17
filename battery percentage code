@@ -1,0 +1,34 @@
+const int voltagePin = A0;  // Analog pin connected to the voltage divider
+float vMax = 8.4;           // Max voltage (100%)
+float vMin = 6.0;           // Min voltage (0%)
+
+void setup() {
+    Serial.begin(9600);
+    Serial.println("Type 'show' to display battery percentage.");
+}
+
+void loop() {
+    // Check for serial input
+    if (Serial.available()) {
+        String command = Serial.readStringUntil('\n');
+        command.trim();  // Clean up input
+
+        if (command == "show") {
+            int rawValue = analogRead(voltagePin);
+            float batteryVoltage = (rawValue / 1023.0) * 5.0 * ((100.0 + 48.0) / 48.0);  // Voltage divider adjustment
+            float batteryPercentage = ((batteryVoltage - vMin) / (vMax - vMin)) * 100;
+
+            batteryPercentage = constrain(batteryPercentage, 0, 100);  // Clamp to 0–100%
+            
+            // Send a single-line CSV-style output
+            Serial.print("Voltage: ");
+            Serial.print(batteryVoltage, 2);  // Limit to 2 decimal places
+            Serial.print(", Battery: ");
+            Serial.print(batteryPercentage, 2);
+            Serial.println("%");
+        }
+    }
+}
+
+
+battery pwercentage code
