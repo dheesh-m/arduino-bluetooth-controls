@@ -1,0 +1,63 @@
+// Motor Driver Pins
+#define IN1 10  // Motor 1 Forward
+#define IN2 11 // Motor 1 Backward
+
+#define IN3 6   // Motor 2 Forward
+#define IN4 5   // Motor 2 Backward
+
+void setup() {
+    Serial.begin(9600);
+    pinMode(IN1, OUTPUT);
+    pinMode(IN2, OUTPUT);
+    pinMode(IN3, OUTPUT);
+    pinMode(IN4, OUTPUT);
+    Serial.println("Ready! Enter commands: F, B, L, R, S");
+}
+
+void loop() {
+    if (Serial.available()) {
+        char command = Serial.read();
+        Serial.print("Received command: ");
+        Serial.println(command);
+
+        switch (command) {
+            case 'F': // Move Forward
+                digitalWrite(IN1, HIGH);
+                digitalWrite(IN2, LOW);
+                digitalWrite(IN3, HIGH);
+                digitalWrite(IN4, LOW);
+                Serial.println("Moving Forward");
+                break;
+            case 'B': // Move Backward
+                digitalWrite(IN1, LOW);
+                digitalWrite(IN2, HIGH);
+                digitalWrite(IN3, LOW);
+                digitalWrite(IN4, HIGH);
+                Serial.println("Moving Backward");
+                break;
+            case 'L': // Turn Left (Right motor moves, left motor idle)
+                digitalWrite(IN1, LOW);
+                digitalWrite(IN2, LOW);
+                digitalWrite(IN3, HIGH);
+                digitalWrite(IN4, LOW);
+                Serial.println("Turning Left");
+                break;
+            case 'R': // Turn Right (Left motor moves, right motor idle)
+                digitalWrite(IN1, HIGH);
+                digitalWrite(IN2, LOW);
+                digitalWrite(IN3, LOW);
+                digitalWrite(IN4, LOW);
+                Serial.println("Turning Right");
+                break;
+            case 'S': // Stop
+                digitalWrite(IN1, LOW);
+                digitalWrite(IN2, LOW);
+                digitalWrite(IN3, LOW);
+                digitalWrite(IN4, LOW);
+                Serial.println("Stopped");
+                break;
+            default:
+                Serial.println("Invalid Command");
+        }
+    }
+}
