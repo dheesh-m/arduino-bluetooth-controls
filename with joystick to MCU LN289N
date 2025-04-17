@@ -1,0 +1,64 @@
+Final code Arduino (Joystick)
+
+#include <SoftwareSerial.h>
+
+#define IN1 10  // Left Motor Forward
+#define IN2 11  // Left Motor Backward
+#define IN3 6  // Right Motor Forward
+#define IN4 5  // Right Motor Backward
+
+void setup() {
+    Serial.begin(9600);
+    pinMode(IN1, OUTPUT);
+    pinMode(IN2, OUTPUT);
+    pinMode(IN3, OUTPUT);
+    pinMode(IN4, OUTPUT);
+}
+
+void loop() {
+    if (Serial.available()) {
+        char command = Serial.read();
+        Serial.print("Received command: ");
+        Serial.println(command);
+
+        switch (command) {
+            case 'F': // Move Forward
+                digitalWrite(IN1, HIGH);
+                digitalWrite(IN2, LOW);
+                digitalWrite(IN3, HIGH);
+                digitalWrite(IN4, LOW);
+                Serial.println("Moving Forward");
+                break;
+            case 'B': // Move Backward
+                digitalWrite(IN1, LOW);
+                digitalWrite(IN2, HIGH);
+                digitalWrite(IN3, LOW);
+                digitalWrite(IN4, HIGH);
+                Serial.println("Moving Backward");
+                break;
+            case 'L': // Turn Left (Only Right Motor Moves)
+                digitalWrite(IN1, LOW);
+                digitalWrite(IN2, LOW);
+                digitalWrite(IN3, HIGH); // Activate Right Motor
+                digitalWrite(IN4, LOW);
+                Serial.println("Turning Left (Right Motor Moves)");
+                break;
+            case 'R': // Turn Right (Only Left Motor Moves)
+                digitalWrite(IN1, HIGH); // Activate Left Motor
+                digitalWrite(IN2, LOW);
+                digitalWrite(IN3, LOW);
+                digitalWrite(IN4, LOW);
+                Serial.println("Turning Right (Left Motor Moves)");
+                break;
+            case 'S': // Stop
+                digitalWrite(IN1, LOW);
+                digitalWrite(IN2, LOW);
+                digitalWrite(IN3, LOW);
+                digitalWrite(IN4, LOW);
+                Serial.println("Stopped");
+                break;
+            default:
+                Serial.println("Invalid Command");
+        }
+    }
+}
